@@ -1,4 +1,5 @@
 import pygame
+
 from game_data.settings import GridBoardSettings
 
 class GridBoard:
@@ -18,6 +19,7 @@ class GridBoard:
         settings = GridBoardSettings.BoxSettings
         def __init__(self, box_num):
             self.box_num = box_num
+            self.is_obstacle = False
                         
             self.column = self.get_columm()
             self.row = self.get_row()
@@ -45,6 +47,10 @@ class GridBoard:
             y = (self.settings.height * self.row) - self.settings.height
             
             return x,y 
+            
+        def is_hovered_over(self):
+            mouse_x, mouse_y = pygame.mouse.get_pos()
+            return self.rect.collidepoint(mouse_x, mouse_y)
             
         def make_border(self):
             self.border_rect = pygame.Rect(self.x,self.y,0,0)
@@ -78,6 +84,22 @@ class GridBoard:
     def __init__(self):
         self.outline = self.Outline()
         self.boxes = [self.Box(num) for num in range(1, GridBoard.num_of_boxes + 1)]
+        
+    def update(self, stats):    
+        def check_to_edit_obstacle():
+            for box in self.boxes:
+                if box.is_hovered_over():
+                    if stats.holding_left_click:
+                        if not box.is_obstacle:
+                            box.is_obstacle = True
+                            box.box_color = self.settings.BoxSettings.obstacle_color
+                            
+                    elif stats.holding_right_click:
+                        if box.is_obstacle:
+                            box.is_obstacle = False
+                            box.box_color = self.settings.BoxSettings.color
+                            
+        check_to_edit_obstacle()
         
     def draw_board(self, screen):
         for box in self.boxes:

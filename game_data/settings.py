@@ -3,13 +3,14 @@ class ScreenSetings:
     screen_height = 675
     
     bg_color = (255,255,255)
-    FPS = 50
+    FPS = 60
     
 class GameSettings:
     pass
     
 class GridBoardSettings:
     class BoxSettings:
+        obstacle_color = (0,0,0)
         color = (255, 255, 255)
         width = 20
         height = 20
@@ -22,4 +23,7 @@ class GridBoardSettings:
     
     width = BoxSettings.width * columns 
     height = BoxSettings.height * rows
+    
+    start_point_color = (0,255,0)
+    end_point_color = (255,0,0)
     
