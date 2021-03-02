@@ -44,4 +44,17 @@ class ClearButton:
         grid_board = game_objects['grid_board']
         for box in grid_board.boxes:
             box.is_obstacle = False
+
+class RandomizeButton:
+    def __init__(self):
+        self.button = Button(3, 'Randomize Points')
+        
+    def randomize(self, game_objects):
+        grid_board = game_objects['grid_board']
+        for box in grid_board.boxes:
+            box.is_obstacle = False
+            box.is_start_point = False
+            box.is_end_point = False
+        
+        grid_board.randomize_points()
         

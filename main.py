@@ -6,7 +6,7 @@ from game_data.settings import ScreenSettings
 from game_data.stats import Stats
 
 from game_objects.board import GridBoard
-from game_objects.buttons import ClearButton
+from game_objects.buttons import ClearButton, RandomizeButton
 
 pygame.init()
 screen = pygame.display.set_mode((ScreenSettings.screen_width, ScreenSettings.screen_height))
@@ -17,10 +17,12 @@ screen.fill(ScreenSettings.bg_color)
 grid_board = GridBoard()
 
 clear_button = ClearButton()
+randomize_button = RandomizeButton()
 
 game_objects = {
     'grid_board' : grid_board,
-    'clear_button' : clear_button
+    'clear_button' : clear_button,
+    'randomize_button' : randomize_button
 }
 
 while True:

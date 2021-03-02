@@ -1,4 +1,5 @@
 import pygame
+from random import randint
 
 from game_data.settings import GridBoardSettings
 
@@ -20,7 +21,7 @@ class GridBoard:
         def __init__(self, box_num):
             self.box_num = box_num
             self.is_obstacle = False
-            self.is_starting_point = False
+            self.is_start_point = False
             self.is_end_point = False
             
             self.column = self.get_columm()
@@ -74,7 +75,7 @@ class GridBoard:
             self.box_color = self.settings.color
             
         def update(self):
-            if self.is_starting_point:
+            if self.is_start_point:
                 self.box_color = self.settings.start_point_color
             elif self.is_end_point:
                 self.box_color = self.settings.end_point_color
@@ -97,21 +98,35 @@ class GridBoard:
         self.outline = self.Outline()
         self.boxes = [self.Box(num) for num in range(1, GridBoard.num_of_boxes + 1)]
         
-        self.choose_starting_point()
-        self.choose_end_point()
+        self.randomize_points()
         
-    def choose_starting_point(self):
-        first_box = self.boxes[0]
-        first_box.is_starting_point = True
+    def randomize_points(self):
+        def randomize_start_point():
+            while True:
+                for box in self.boxes:
+                    chance = randint(1, self.num_of_boxes) == 1
+                    if chance:
+                        box.is_start_point = True
+                        return
         
-    def choose_end_point(self):
-        last_box = self.boxes[len(self.boxes) - 1]
-        last_box.is_end_point = True
+        def randomize_end_point():
+            while True:
+                for box in self.boxes:
+                    if box.is_start_point:
+                        continue
+
+                    chance = randint(1, self.num_of_boxes) == 1
+                    if chance:
+                        box.is_end_point = True
+                        return
+        
+        randomize_start_point()
+        randomize_end_point()
         
     def update(self, stats):    
         def check_to_edit_obstacle():
             for box in self.boxes:
-                if box.is_starting_point or box.is_end_point:
+                if box.is_start_point or box.is_end_point:
                     continue
                 
                 if box.is_hovered_over():
