@@ -20,10 +20,12 @@ class GridBoard:
         def __init__(self, box_num):
             self.box_num = box_num
             self.is_obstacle = False
-                        
+            self.is_starting_point = False
+            self.is_end_point = False
+            
             self.column = self.get_columm()
             self.row = self.get_row()
-                    
+            
             self.x, self.y = self.get_cords()
             
             self.make_border()
@@ -71,6 +73,16 @@ class GridBoard:
             
             self.box_color = self.settings.color
             
+        def update(self):
+            if self.is_starting_point:
+                self.box_color = self.settings.start_point_color
+            elif self.is_end_point:
+                self.box_color = self.settings.end_point_color
+            elif self.is_obstacle:
+                self.box_color = self.settings.obstacle_color
+            else:
+                self.box_color = self.settings.color
+            
         def draw_box(self, screen):
             pygame.draw.rect(screen, self.border_color, self.border_rect)
             pygame.draw.rect(screen, self.box_color, self.rect)
@@ -85,21 +97,35 @@ class GridBoard:
         self.outline = self.Outline()
         self.boxes = [self.Box(num) for num in range(1, GridBoard.num_of_boxes + 1)]
         
+        self.choose_starting_point()
+        self.choose_end_point()
+        
+    def choose_starting_point(self):
+        first_box = self.boxes[0]
+        first_box.is_starting_point = True
+        
+    def choose_end_point(self):
+        last_box = self.boxes[len(self.boxes) - 1]
+        last_box.is_end_point = True
+        
     def update(self, stats):    
         def check_to_edit_obstacle():
             for box in self.boxes:
+                if box.is_starting_point or box.is_end_point:
+                    continue
+                
                 if box.is_hovered_over():
                     if stats.holding_left_click:
                         if not box.is_obstacle:
                             box.is_obstacle = True
-                            box.box_color = self.settings.BoxSettings.obstacle_color
                             
                     elif stats.holding_right_click:
                         if box.is_obstacle:
                             box.is_obstacle = False
-                            box.box_color = self.settings.BoxSettings.color
                             
         check_to_edit_obstacle()
+        for box in self.boxes:
+            box.update()
         
     def draw_board(self, screen):
         for box in self.boxes:

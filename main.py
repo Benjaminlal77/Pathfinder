@@ -2,23 +2,28 @@ import pygame
 
 from game_functions.events import check_events
 from game_functions.update import update_screen
-from game_data.settings import ScreenSetings
+from game_data.settings import ScreenSettings
 from game_data.stats import Stats
 
 from game_objects.board import GridBoard
+from game_objects.buttons import ClearButton
 
-screen = pygame.display.set_mode((ScreenSetings.screen_width, ScreenSetings.screen_height))
+pygame.init()
+screen = pygame.display.set_mode((ScreenSettings.screen_width, ScreenSettings.screen_height))
 stats = Stats()
 
-screen.fill(ScreenSetings.bg_color)
+screen.fill(ScreenSettings.bg_color)
 
 grid_board = GridBoard()
 
+clear_button = ClearButton()
+
 game_objects = {
-    'grid_board' : grid_board
+    'grid_board' : grid_board,
+    'clear_button' : clear_button
 }
 
 while True:
-    check_events(stats)
+    check_events(game_objects, stats)
     update_screen(screen, game_objects, stats)
     
