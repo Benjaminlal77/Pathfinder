@@ -21,16 +21,20 @@ class ButtonSettings:
 class GridBoardSettings:
     class NodeSettings:
         obstacle_color = (0,0,0)
-        color = (255, 255, 255)
+        color = (255,255,255)
+        
         start_point_color = (0,255,0)
         end_point_color = (255,0,0)
-        path_color = (0, 0, 255)
+        
+        open_color = (0,171,195)
+        closed_color = (230, 98, 47)
+        path_color = (0,0,255)
         
         width = 20
         height = 20
         
         border_size = 1
-        border_color = (0, 0, 0)
+        border_color = (0,0,0)
         
     columns = 30
     rows = 30

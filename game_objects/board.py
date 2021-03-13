@@ -2,6 +2,9 @@ import pygame
 from random import randint
 from math import sqrt
 
+from game_functions.events import check_events_while_finding_path
+from game_functions.update import update_screen_while_finding_path
+
 from game_data.settings import GridBoardSettings
 
 class GridBoard:
@@ -22,9 +25,14 @@ class GridBoard:
         def __init__(self, node_num):
             self.node_num = node_num
             self.is_obstacle = False
+            
             self.is_start_point = False
             self.is_end_point = False
+            
+            self.is_open = False
+            self.is_closed = False
             self.is_part_of_path = False
+            
             self.parent = None
             
             self.g_cost = 0
@@ -131,6 +139,9 @@ class GridBoard:
             self.g_cost = 0
             self.h_cost = 0
             self.f_cost = 0
+            
+            self.is_open = False
+            self.is_closed = False
             self.is_part_of_path = False
             
         def check_to_change_color(self):
@@ -142,6 +153,10 @@ class GridBoard:
                 self.node_color = self.settings.obstacle_color
             elif self.is_part_of_path:
                 self.node_color = self.settings.path_color
+            elif self.is_open:
+                self.node_color = self.settings.open_color
+            elif self.is_closed:
+                self.node_color = self.settings.closed_color
             else:
                 self.node_color = self.settings.color
             
@@ -222,10 +237,10 @@ class GridBoard:
         distance = sqrt(x_distance + y_distance)
         return distance
                
-    def find_path(self):            
+    def find_path(self, stats, screen):            
         def get_closet_node():
             closet_node = None
-            for node in nodes_to_evaluate:
+            for node in open_nodes:
                 if not closet_node:
                     closet_node = node
                 elif node.f_cost < closet_node.f_cost:
@@ -235,36 +250,51 @@ class GridBoard:
             
             return closet_node
             
-        nodes_to_evaluate = []
-        evaluated_nodes = []
+        def path_is_shorter():
+            new_path_to_node = closet_node.g_cost + self.get_distance_between(neighbor, closet_node)
+            return new_path_to_node < neighbor.g_cost
+            
+        open_nodes = []
+        closed_nodes = []
         
         start_node = self.get_starting_node()
         end_node = self.get_ending_node()
-        nodes_to_evaluate.append(start_node)
+        open_nodes.append(start_node)
         
-        while True:        
+        while True:
             closet_node = get_closet_node()
-            nodes_to_evaluate.remove(closet_node)
-            evaluated_nodes.append(closet_node)
-            
+            open_nodes.remove(closet_node)
+            closet_node.is_open = False
+            closed_nodes.append(closet_node)
+            closet_node.is_closed = True
+                
+            closet_node.check_to_change_color()
+                
             if closet_node is end_node:
                 for node in closet_node.get_path():
                     node.is_part_of_path = True
                 break
             
             for neighbor in closet_node.neighbors:
-                if neighbor.is_obstacle or neighbor in evaluated_nodes:
+                if neighbor.is_obstacle or neighbor.is_closed:
                     continue   
-                                
-                new_cost = closet_node.g_cost + self.get_distance_between(neighbor, closet_node)        
-                if new_cost < neighbor.g_cost or not (neighbor in nodes_to_evaluate):
+        
+                if path_is_shorter() or not neighbor in open_nodes:
                     neighbor.g_cost = closet_node.g_cost + self.get_distance_between(closet_node, neighbor) 
                     neighbor.h_cost = self.get_distance_between(neighbor, end_node)
                     neighbor.f_cost = neighbor.g_cost + neighbor.h_cost
                     
                     neighbor.parent = closet_node
-                    nodes_to_evaluate.append(neighbor) 
-        
+                    if not neighbor.is_open in open_nodes:
+                        neighbor.is_open = True
+                        open_nodes.append(neighbor) 
+                        
+                        neighbor.check_to_change_color()
+                        check_events_while_finding_path(stats)
+                        
+                        if not stats.fast_solve:
+                            update_screen_while_finding_path(self, screen)            
+
     def draw_board(self, screen):
         for node in self.nodes:
             node.draw_node(screen)

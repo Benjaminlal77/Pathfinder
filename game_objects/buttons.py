@@ -44,22 +44,31 @@ class ClearButton:
         grid_board = game_objects['grid_board']
         for node in grid_board.nodes:
             node.is_obstacle = False
+            
+            node.is_open = False
+            node.is_closed = False
             node.is_part_of_path = False
 
 class FindPathButton:
     def __init__(self):
         self.button = Button(2, 'Find Path')
         
-    def find_path(self, game_objects):
+    def find_path(self, game_objects, stats, screen):
         grid_board = game_objects['grid_board']
         for node in grid_board.nodes:
             node.g_cost = 0
             node.h_cost = 0
             node.f_cost = 0
             node.parent = None 
+            
+            node.is_open = False
+            node.is_closed = False
             node.is_part_of_path = False
             
-        grid_board.find_path()
+            node.check_to_change_color()
+            
+        stats.fast_solve = False
+        grid_board.find_path(stats, screen)
 
 class RandomizeButton:
     def __init__(self):

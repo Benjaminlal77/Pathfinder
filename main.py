@@ -28,6 +28,6 @@ game_objects = {
 }
 
 while True:
-    check_events(game_objects, stats)
+    check_events(game_objects, stats, screen)
     update_screen(screen, game_objects, stats)
     

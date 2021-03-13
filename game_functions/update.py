@@ -1,6 +1,7 @@
 import pygame
 
 from game_data.settings import ScreenSettings
+from game_objects.text_box import FastSolveTextBox
 
 def update_screen(screen, game_objects, stats):
     def draw_game_objects():
@@ -25,3 +26,11 @@ def update_screen(screen, game_objects, stats):
     pygame.display.flip()
     pygame.time.Clock().tick(ScreenSettings.FPS)
 
+def update_screen_while_finding_path(grid_board, screen):
+    screen.fill(ScreenSettings.bg_color)
+
+    grid_board.draw_board(screen)
+    FastSolveTextBox().write_text(screen)
+
+    pygame.display.flip()
+    pygame.time.Clock().tick(ScreenSettings.FPS)
