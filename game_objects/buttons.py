@@ -42,8 +42,24 @@ class ClearButton:
         
     def clear_board(self, game_objects):
         grid_board = game_objects['grid_board']
-        for box in grid_board.boxes:
-            box.is_obstacle = False
+        for node in grid_board.nodes:
+            node.is_obstacle = False
+            node.is_part_of_path = False
+
+class FindPathButton:
+    def __init__(self):
+        self.button = Button(2, 'Find Path')
+        
+    def find_path(self, game_objects):
+        grid_board = game_objects['grid_board']
+        for node in grid_board.nodes:
+            node.g_cost = 0
+            node.h_cost = 0
+            node.f_cost = 0
+            node.parent = None 
+            node.is_part_of_path = False
+            
+        grid_board.find_path()
 
 class RandomizeButton:
     def __init__(self):
@@ -51,10 +67,8 @@ class RandomizeButton:
         
     def randomize(self, game_objects):
         grid_board = game_objects['grid_board']
-        for box in grid_board.boxes:
-            box.is_obstacle = False
-            box.is_start_point = False
-            box.is_end_point = False
+        for node in grid_board.nodes:
+            node.reset()
         
-        grid_board.randomize_points()
+        grid_board.randomize_node_points()
         

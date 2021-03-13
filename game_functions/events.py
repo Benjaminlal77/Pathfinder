@@ -7,11 +7,14 @@ right_click = 3
 def check_mouse_click(game_objects, stats, event):
     clear_button = game_objects['clear_button']
     randomize_button = game_objects['randomize_button']
+    find_path_button = game_objects['find_path_button']
     
     if clear_button.button.is_clicked():
         clear_button.clear_board(game_objects)
     elif randomize_button.button.is_clicked():
         randomize_button.randomize(game_objects)
+    elif find_path_button.button.is_clicked():
+        find_path_button.find_path(game_objects)
     
     elif event.button == left_click:
         stats.holding_left_click = True

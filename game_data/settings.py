@@ -19,11 +19,12 @@ class ButtonSettings:
     size = (width, height)
         
 class GridBoardSettings:
-    class BoxSettings:
+    class NodeSettings:
         obstacle_color = (0,0,0)
         color = (255, 255, 255)
         start_point_color = (0,255,0)
         end_point_color = (255,0,0)
+        path_color = (0, 0, 255)
         
         width = 20
         height = 20
@@ -34,6 +35,6 @@ class GridBoardSettings:
     columns = 30
     rows = 30
     
-    width = BoxSettings.width * columns 
-    height = BoxSettings.height * rows
+    width = NodeSettings.width * columns 
+    height = NodeSettings.height * rows
     
