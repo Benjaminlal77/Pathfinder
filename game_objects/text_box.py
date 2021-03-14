@@ -1,4 +1,5 @@
 import pygame
+
 from game_data.settings import ScreenSettings
 
 class Text:
@@ -13,8 +14,21 @@ class Text:
 class FastSolveTextBox:
     def __init__(self):
         self.text = Text('SPACE - Fast solve', 30, (0, 0, 0), (0, 0))
+        
+        # Defining cords
         self.text.text_rect.centerx = ScreenSettings.screen_width/2
         self.text.text_rect.centery = ScreenSettings.screen_height - 37
+        
+    def write_text(self, screen):
+        screen.blit(self.text.text_image, self.text.text_rect)
+
+class NoPathTextBox:
+    def __init__(self):
+        self.text = Text('No path', 25, (255, 0, 0), (0, 0))
+        
+        # Defining cords
+        self.text.text_rect.centerx = ScreenSettings.screen_width/2
+        self.text.text_rect.centery = ScreenSettings.screen_height - 65
         
     def write_text(self, screen):
         screen.blit(self.text.text_image, self.text.text_rect)

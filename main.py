@@ -10,12 +10,16 @@ from game_objects.buttons import ClearButton, FindPathButton, RandomizeButton
 
 pygame.init()
 screen = pygame.display.set_mode((ScreenSettings.screen_width, ScreenSettings.screen_height))
-stats = Stats()
 
-screen.fill(ScreenSettings.bg_color)
+pygame.display.set_caption('Path Finder')
+icon_image = pygame.image.load('images/icon.png')
+pygame.display.set_icon(icon_image)
+
+stats = Stats()
 
 grid_board = GridBoard()
 
+# Creating game objects
 clear_button = ClearButton()
 find_path_button = FindPathButton()
 randomize_button = RandomizeButton()
@@ -28,6 +32,6 @@ game_objects = {
 }
 
 while True:
-    check_events(game_objects, stats, screen)
-    update_screen(screen, game_objects, stats)
+    check_events(screen, stats, game_objects)
+    update_screen(screen, stats, game_objects)
     
